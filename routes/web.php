@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Models\Subscriber;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,4 +24,15 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/subscribe', function () {
     return view('subscribe');
-})->name('subscribe');
+})->name('subscribe.create');
+
+Route::middleware(['auth:sanctum', 'verified'])->post('/subscribe', function () {
+    $subscriber = new Subscriber();
+
+    $subscriber->name = request()->user()->name;
+    $subscriber->email = request()->user()->email;
+
+    $subscriber->save();
+
+    return redirect(route('subscribe.create'))->with('message', 'You are now subscribed !');
+})->name('subscribe.store');
