@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Models\Subscriber;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\UserSubscribed;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +35,10 @@ Route::middleware(['auth:sanctum', 'verified'])->post('/subscribe', function () 
     $subscriber->email = request()->user()->email;
 
     $subscriber->save();
+
+    // Notification::send(request()->user(), new UserSubscribed());
+
+    request()->user()->notify(new UserSubscribed());
 
     return redirect(route('subscribe.create'))->with('message', 'You are now subscribed !');
 })->name('subscribe.store');
