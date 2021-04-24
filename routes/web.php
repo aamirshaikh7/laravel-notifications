@@ -44,11 +44,5 @@ Route::middleware(['auth:sanctum', 'verified'])->post('/subscribe', function () 
 })->name('subscribe.store');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/notifications', function () {
-    $unreadNotifications = auth()->user()->unreadNotifications;
-
-    $unreadNotifications->markAsRead();
-    
-    $readNotifications = auth()->user()->readNotifications;
-    
-    return view('notifications', ['unreadNotifications' => $unreadNotifications, 'readNotifications' => $readNotifications]);
+    return view('notifications', ['unreadNotifications' => tap(auth()->user()->unreadNotifications)->markAsRead(), 'readNotifications' => auth()->user()->readNotifications]);
 })->name('notifications.index');
