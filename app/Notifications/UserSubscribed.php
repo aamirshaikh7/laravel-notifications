@@ -16,9 +16,9 @@ class UserSubscribed extends Notification
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($channel)
     {
-        //
+        $this->channel = $channel;
     }
 
     /**
@@ -29,7 +29,7 @@ class UserSubscribed extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['mail', 'database'];
     }
 
     /**
@@ -56,7 +56,7 @@ class UserSubscribed extends Notification
     public function toArray($notifiable)
     {
         return [
-            //
+            'channel' => $this->channel
         ];
     }
 }

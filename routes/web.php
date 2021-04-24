@@ -38,7 +38,17 @@ Route::middleware(['auth:sanctum', 'verified'])->post('/subscribe', function () 
 
     // Notification::send(request()->user(), new UserSubscribed());
 
-    request()->user()->notify(new UserSubscribed());
+    request()->user()->notify(new UserSubscribed('abc channel'));
 
     return redirect(route('subscribe.create'))->with('message', 'You are now subscribed !');
 })->name('subscribe.store');
+
+Route::middleware(['auth:sanctum', 'verified'])->get('/notifications', function () {
+    $unreadNotifications = auth()->user()->unreadNotifications;
+
+    $unreadNotifications->markAsRead();
+    
+    $readNotifications = auth()->user()->readNotifications;
+    
+    return view('notifications', ['unreadNotifications' => $unreadNotifications, 'readNotifications' => $readNotifications]);
+})->name('notifications.index');
