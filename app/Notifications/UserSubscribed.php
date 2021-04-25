@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Notifications\Messages\NexmoMessage;
 
 class UserSubscribed extends Notification
 {
@@ -29,7 +30,7 @@ class UserSubscribed extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail', 'database'];
+        return ['mail', 'database', 'nexmo'];
     }
 
     /**
@@ -58,5 +59,11 @@ class UserSubscribed extends Notification
         return [
             'channel' => $this->channel
         ];
+    }
+
+    public function toNexmo($notifiable)
+    {
+        return (new NexmoMessage())
+            ->content('You have subscribed to ' . $this->channel);
     }
 }
