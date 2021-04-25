@@ -40,7 +40,11 @@ Route::middleware(['auth:sanctum', 'verified'])->post('/subscribe', function () 
 
     request()->user()->notify(new UserSubscribed('abc channel'));
 
-    return redirect(route('subscribe.create'))->with('message', 'You are now subscribed !');
+    \App\Events\UserSubscribed::dispatch('abc');
+    
+    // event(new UserSubscribed('abc'));
+
+    // return redirect(route('subscribe.create'))->with('message', 'You are now subscribed !');
 })->name('subscribe.store');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/notifications', function () {
